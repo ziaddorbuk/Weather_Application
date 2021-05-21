@@ -6,11 +6,14 @@ var desc = document.querySelector('.desc');
 var date = document.querySelector('.date');
 var button= document.querySelector('.submit');
 
+const apiKey = '7206b5ade23555ede8556b0b97b6db5a';
+
 let d = new Date();
-let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
+let newDate = d.getMonth()+1+'.'+ d.getDate()+'.'+ d.getFullYear();
 //event listner triggered onClick
 button.addEventListener('click', function(name){
-fetch('http://api.openweathermap.org/data/2.5/weather?zip='+input.value+'&appid=7206b5ade23555ede8556b0b97b6db5a')
+  console.log(input.value);
+fetch(`http://api.openweathermap.org/data/2.5/weather?zip=${input.value},&units=metric&appid=${apiKey}`)
 .then(response => response.json())
 .then(data => {
   // if responce: get temp and name of the city drom the ressponce
@@ -19,7 +22,7 @@ fetch('http://api.openweathermap.org/data/2.5/weather?zip='+input.value+'&appid=
   //converting input text (feeling) to readable text
   var inText = feeling.value;
   // posting data from API to server
-  postData('/add',{temp:parseInt( tempValue-273.15),cityName:nameValue,feeling: inText,date:newDate});
+  postData('/add',{temp:parseInt(tempValue),cityName:nameValue,feeling: inText,date:newDate});
   // updating the UI after the server responce
   updateUI();
 
@@ -52,10 +55,10 @@ const updateUI= async () => {
   try{
     // chack for valied data then update the UI
       const allData = await req.json();
-      main.innerHTML = `City: ${allData[0].name}`;
-      temp.innerHTML = `${allData[0].temp}°C`;
-      date.innerHTML = `date:${allData[0].date}`;
-      desc.innerHTML = `feeling: ${allData[0].feeling}`
+      main.innerHTML = `City: ${allData.name}`;
+      temp.innerHTML = `${allData.temp}°C`;
+      date.innerHTML = `date:${allData.date}`;
+      desc.innerHTML = `feeling: ${allData.feeling}`
   }catch(e){
       console.log("error at updatting UI"+e);
   }
